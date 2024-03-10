@@ -1,5 +1,6 @@
 package com.jlu.audiocheck;
 
+import cn.dev33.satoken.SaManager;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -17,6 +18,7 @@ public class AudioCheckApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AudioCheckApplication.class, args);
+        log.info("启动成功，Sa-Token 配置如下：" + SaManager.getConfig());
     }
 
 }

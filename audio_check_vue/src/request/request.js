@@ -5,16 +5,20 @@ import Vue from 'vue'
 
 const request = axios.create({
   baseURL: 'http://localhost:8080/',
-  timeout: 5000
+  timeout: 5000,
 })
 
 //请求拦截器
 request.interceptors.request.use(
   function (config) {
+    const token = sessionStorage.getItem("tokenValue") ? sessionStorage.getItem("tokenValue") : null
+    if (token) {
+      config.headers['token'] = token
+    }
     return config
   },
   function (error) {
-    Vue.prototype.$message.error('服务器请求错误')
+    Vue.prototype.$message.error('出错了')
     return Promise.reject(error)
   }
 )
@@ -25,7 +29,7 @@ request.interceptors.response.use(
     return response.data
   },
   function (error) {
-    Vue.prototype.$message.error('服务器请求错误')
+    Vue.prototype.$message.error(error.response.data.message)
     return Promise.reject(error)
   }
 )

@@ -1,12 +1,5 @@
 import request from '@/request/request'
 
-export function hello() {
-  return request({
-    url: 'hello',
-    method: 'GET'
-  })
-}
-
 export function login(name, password) {
   return request({
     url: 'login',
@@ -39,4 +32,25 @@ export function modifyPassword(name, oldPassword, newPassword) {
       newPassword
     }
   })
+}
+
+export function checkLogin() {
+  return request({
+    url: 'checkLogin',
+    method: 'POST',
+  })
+}
+
+export function logout() {
+  return request({
+    url: 'logout',
+    method: 'POST',    
+  })
+}
+
+export function getRuleList() {
+  return request({
+    url: 'getRuleList',
+    method: 'POST',
+  })  
 }
