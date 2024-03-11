@@ -25,10 +25,13 @@
               <el-input v-model="loginForm.password" show-password></el-input>
             </el-form-item>
             <el-form-item>
-              <el-col :span="6">
+              <el-col :span="2">
                 <br>
               </el-col>
-              <el-col :span="9">
+              <el-col :span="10">
+                <el-button @click="register()">注册</el-button>
+              </el-col>
+              <el-col :span="12">
                 <el-button type="primary" @click="submitForm()">登录</el-button>
               </el-col>
             </el-form-item>
@@ -61,6 +64,9 @@ export default {
         }
       });
     },
+    register() {
+      this.$router.push("/register")
+    }
   },
   data() {
     return {

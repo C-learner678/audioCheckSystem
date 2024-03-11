@@ -18,6 +18,10 @@
               <i class="el-icon-menu"></i>
               <span slot="title">文件上传</span>
             </el-menu-item>
+            <el-menu-item index="2">
+              <i class="el-icon-menu"></i>
+              <span slot="title">文件管理</span>
+            </el-menu-item>
           </el-menu>
         </div>
         <div v-else-if="index=='3'">
@@ -40,8 +44,11 @@
         </div>
       </el-col>
       <el-col :span="20">
+        <div v-if="index=='1' && leftIndex=='1'">
+          <rule-table></rule-table>
+        </div>
         <div v-if="index=='4' && leftIndex=='1'">
-          123
+          <modify-password></modify-password>
         </div>
       </el-col>
     </el-row>
@@ -49,8 +56,15 @@
 </template>
 
 <script>
+import RuleTable from './RuleTable.vue';
+import ModifyPassword from './ModifyPassword.vue'; 
+
 export default {
   name: 'LeftMenu',
+  components: {
+    ModifyPassword,
+    RuleTable
+  },
   methods: {
     handleSelect(key, keyPath) {
       this.leftIndex = key

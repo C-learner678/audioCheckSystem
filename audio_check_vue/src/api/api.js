@@ -22,12 +22,11 @@ export function register(name, password) {
   })
 }
 
-export function modifyPassword(name, oldPassword, newPassword) {
+export function modifyPassword(oldPassword, newPassword) {
   return request({
-    url: 'login',
+    url: 'modifyPassword',
     method: 'POST',
     data: {
-      name,
       oldPassword,
       newPassword
     }
@@ -52,5 +51,17 @@ export function getRuleList() {
   return request({
     url: 'getRuleList',
     method: 'POST',
+  })  
+}
+
+export function createRule(name, context, description) {
+  return request({
+    url: 'createRule',
+    method: 'POST',
+    data: {
+      name,
+      context,
+      description
+    }
   })  
 }

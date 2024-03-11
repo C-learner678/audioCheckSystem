@@ -1,0 +1,15 @@
+AFTER=1
+OR=2
+AND=3
+LPAREN=4
+RPAREN=5
+NOT=6
+INT=7
+WORD=8
+WS=9
+'#'=1
+'|'=2
+'&'=3
+'('=4
+')'=5
+'!'=6
