@@ -66,9 +66,7 @@ public class UserService {
 
     public Result checkLogin(){
         Integer id = Integer.valueOf((String) StpUtil.getLoginId());
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id);
-        User user = userMapper.selectOne(queryWrapper);
+        User user = userMapper.selectById(id);
         if(user == null) {
             StpUtil.logout();
             return Result.fail("请重新登录！");

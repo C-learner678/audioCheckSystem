@@ -26,6 +26,10 @@ request.interceptors.request.use(
 //返回拦截器
 request.interceptors.response.use(
   function (response) {
+    if(response.data.code != 200){
+      Vue.prototype.$message.error(response.data.message)
+      throw new Error()
+    }
     return response.data
   },
   function (error) {

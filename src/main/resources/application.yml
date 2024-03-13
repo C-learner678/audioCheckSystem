@@ -19,6 +19,12 @@ spring:
         max-wait: -1ms
         max-idle: 10
         min-idle: 0
+  servlet:
+    multipart:
+      max-file-size:
+        5MB
+      max-request-size:
+        5MB
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
@@ -32,3 +38,7 @@ sa-token:
   token-style: uuid
   is-log: true
 
+file:
+  upload:
+    path:
+      C:/files/audio/

@@ -5,10 +5,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
-@ApiModel(description="新增规则DTO")
-public class CreateRuleDTO {
+@ApiModel(description="编辑规则DTO")
+public class EditRuleDTO {
+    @NotNull
+    @ApiModelProperty("规则ID")
+    private Integer id;
     @NotBlank(message = "规则名称不能为空")
     @ApiModelProperty("规则名称")
     private String name;

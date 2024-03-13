@@ -1,13 +1,5 @@
 <template>
-  <div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+  <div style="margin-top: 160px;">
     <el-row>
       <el-col :span="8">
         <br>
@@ -92,6 +84,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

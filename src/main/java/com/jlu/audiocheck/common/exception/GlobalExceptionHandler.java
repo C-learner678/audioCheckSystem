@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = RuleException.class)
     public Result handler(RuleException e){
         log.error("RuleException异常：" + e.getMessage());
-        return Result.fail(e.getMessage());
+        return Result.fail("规则不符合要求：" + e.getMessage());
     }
     //Assert
     @ResponseStatus(HttpStatus.BAD_REQUEST)

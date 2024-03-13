@@ -9,6 +9,10 @@
               <i class="el-icon-menu"></i>
               <span slot="title">规则设置</span>
             </el-menu-item>
+            <el-menu-item index="2">
+              <i class="el-icon-menu"></i>
+              <span slot="title">规则说明</span>
+            </el-menu-item>
           </el-menu>
         </div>
         <div v-else-if="index=='2'">
@@ -47,7 +51,13 @@
         <div v-if="index=='1' && leftIndex=='1'">
           <rule-table></rule-table>
         </div>
-        <div v-if="index=='4' && leftIndex=='1'">
+        <div v-else-if="index=='1' && leftIndex=='2'">
+          <rule-doc></rule-doc>
+        </div>
+        <div v-else-if="index=='2' && leftIndex=='1'">
+          <audio-upload></audio-upload>
+        </div>
+        <div v-else-if="index=='4' && leftIndex=='1'">
           <modify-password></modify-password>
         </div>
       </el-col>
@@ -57,13 +67,17 @@
 
 <script>
 import RuleTable from './RuleTable.vue';
+import RuleDoc from './RuleDoc.vue'
+import AudioUpload from './AudioUpload.vue'
 import ModifyPassword from './ModifyPassword.vue'; 
 
 export default {
   name: 'LeftMenu',
   components: {
+    RuleTable,
+    RuleDoc,
+    AudioUpload,
     ModifyPassword,
-    RuleTable
   },
   methods: {
     handleSelect(key, keyPath) {
@@ -78,7 +92,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -47,10 +47,15 @@ export function logout() {
   })
 }
 
-export function getRuleList() {
+export function getRuleList(name, currentPage, pageSize) {
   return request({
     url: 'getRuleList',
     method: 'POST',
+    data: {
+      name,
+      currentPage, 
+      pageSize
+    }
   })  
 }
 
@@ -65,3 +70,39 @@ export function createRule(name, context, description) {
     }
   })  
 }
+
+export function editRule(id, name, context, description){
+  return request({
+    url: 'editRule',
+    method: 'POST',
+    data: {
+      id,
+      name,
+      context,
+      description
+    }
+  })  
+}
+
+export function deleteRule(id){
+  return request({
+    url: 'deleteRule',
+    method: 'POST',
+    data: {
+      id
+    }
+  })  
+}
+
+export function recognizeFile(format, rate, fileList){
+  return request({
+    url: 'recognizeFile',
+    method: 'POST',
+    data: {
+      format,
+      rate,
+      fileList
+    }
+  })  
+}
+
