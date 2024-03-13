@@ -16,9 +16,9 @@ public class RecognizeFileDTO {
     @NotBlank
     @ApiModelProperty("文件格式")
     private String format;
-    @NotNull
+    @NotBlank
     @ApiModelProperty("采样率")
-    private Integer rate;
+    private String rate;
     @NotEmpty
     @ApiModelProperty("文件列表")
     private List<Map<String, String>> fileList;

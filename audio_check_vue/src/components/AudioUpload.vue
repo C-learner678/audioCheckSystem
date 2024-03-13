@@ -119,7 +119,7 @@ export default {
       },
       uploadForm: {
         format: 'pcm',
-        rate: 16000,
+        rate: '16000',
         fileList: [],
       }
     }
