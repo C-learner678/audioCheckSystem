@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @ApiModel(description="删除规则DTO")
 public class DeleteRuleDTO {
-    @NotNull
+    @NotNull(message = "规则ID不能为空")
     @ApiModelProperty("规则ID")
     private Integer id;
 }

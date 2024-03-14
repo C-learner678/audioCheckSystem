@@ -13,13 +13,13 @@ import java.util.Map;
 @Data
 @ApiModel(description="识别文件DTO")
 public class RecognizeFileDTO {
-    @NotBlank
+    @NotBlank(message = "文件格式不能为空")
     @ApiModelProperty("文件格式")
     private String format;
-    @NotBlank
+    @NotBlank(message = "采样率不能为空")
     @ApiModelProperty("采样率")
     private String rate;
-    @NotEmpty
+    @NotEmpty(message = "文件列表不能为空")
     @ApiModelProperty("文件列表")
     private List<Map<String, String>> fileList;
 }

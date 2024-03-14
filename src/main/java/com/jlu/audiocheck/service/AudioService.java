@@ -1,11 +1,10 @@
 package com.jlu.audiocheck.service;
 
 import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.JSONArray;
 import com.jlu.audiocheck.common.ffmpeg.FFmpegUtil;
 import lombok.extern.slf4j.Slf4j;
-import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import org.json.JSONObject;
 import com.jlu.audiocheck.common.okhttp.OkHttpUtil;
 import com.jlu.audiocheck.common.result.Result;
 import com.jlu.audiocheck.controller.dto.audio.RecognizeFileDTO;
@@ -14,27 +13,25 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
+import com.alibaba.fastjson.JSON;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
 public class AudioService {
     @Value("${file.upload.path}")
     private String path;
-    @Value("${api-key}")
+    @Value("${baidu.api-key}")
     private String API_KEY;
-    @Value("${secret-key}")
+    @Value("${baidu.secret-key}")
     private String SECRET_KEY;
-    @Value("${cuid}")
+    @Value("${baidu.cuid}")
     private String cuid;
 
     private final OkHttpClient HTTP_CLIENT = OkHttpUtil.getInstance();
@@ -60,13 +57,16 @@ public class AudioService {
             }
         }
         ArrayList<ArrayList<Object>> files = new ArrayList<>();
+        ArrayList<String> fileNames = new ArrayList<>();
         if(recognizeFileDTO.getFormat().equals("pcm")) {
             for (Map<String, String> m : recognizeFileDTO.getFileList()) {
                 String path1 = path + m.get("serverFileName");
                 if (!Files.exists(Paths.get(path1))) {
                     return Result.fail("文件" + m.get("fileName") + "不存在，请重新上传");
                 } else {
+                    String clientName = m.get("fileName");
                     files.add(getFileContentAsBase64(path1, false));
+                    fileNames.add(clientName);
                 }
             }
         }else {
@@ -76,8 +76,9 @@ public class AudioService {
                     return Result.fail("文件" + m.get("fileName") + "不存在，请重新上传");
                 } else {
                     int index = m.get("serverFileName").lastIndexOf('.');
-                    String name = m.get("serverFileName").substring(0, index) + ".pcm";
-                    String path2 = path + name;
+                    String newServerName = m.get("serverFileName").substring(0, index) + ".pcm";
+                    String path2 = path + newServerName;
+                    String clientName = m.get("fileName");
                     FFmpegBuilder builder = new FFmpegBuilder()
                             .setInput(path1)
                             .overrideOutputFiles(true)
@@ -87,9 +88,9 @@ public class AudioService {
                             .setAudioSampleRate(16000)
                             .setAudioChannels(1)
                             .done();
-                    FFmpegExecutor f = FFmpegUtil.getInstance();
-                    f.createJob(builder).run();
+                    FFmpegUtil.getInstance().createJob(builder).run();
                     files.add(getFileContentAsBase64(path2, false));
+                    fileNames.add(clientName);
                 }
             }
         }
@@ -101,9 +102,11 @@ public class AudioService {
         String channel = "1";
         String token = getAccessToken();
         MediaType mediaType = MediaType.parse("application/json");
-        for (ArrayList<Object> file: files) {
-            String speech = (String) file.get(0);
-            int length = (int) file.get(1);
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+        for (int i = 0; i < files.size(); ++i) {
+            String speech = (String) files.get(i).get(0);
+            int length = (int) files.get(i).get(1);
+            /*
             RequestBody body = RequestBody.create(mediaType,
                     "{\"format\":\"" + format + "\"," +
                             "\"rate\":\"" + rate + "\"," +
@@ -119,9 +122,17 @@ public class AudioService {
                     .addHeader("Accept", "application/json")
                     .build();
             Response response = HTTP_CLIENT.newCall(request).execute();
-            log.info(response.body().string());
+            JSONObject jsonObject = JSON.parseObject(response.body().string());
+            String res = (String) jsonObject.getJSONArray("result").get(0);
+
+             */
+            String res = "我是结果";
+            HashMap<String, String> map = new HashMap<>();
+            map.put("fileName", fileNames.get(i));
+            map.put("context", res);
+            result.add(map);
         }
-        return Result.success();
+        return Result.success(result);
     }
 
     private ArrayList<Object> getFileContentAsBase64(String path, boolean urlEncode) throws IOException {
@@ -146,6 +157,6 @@ public class AudioService {
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .build();
         Response response = HTTP_CLIENT.newCall(request).execute();
-        return new JSONObject(response.body().string()).getString("access_token");
+        return JSON.parseObject(response.body().string()).getString("access_token");
     }
 }

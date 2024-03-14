@@ -3,15 +3,16 @@ package com.jlu.audiocheck.common.ffmpeg;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFprobe;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Component
 public class FFmpegUtil {
-    private static final String ffmpegPath = "C:/Program Files (x86)/ffmpeg/ffmpeg-6.1.1-full_build/bin/ffmpeg.exe";
-    private static final String ffprobePath = "C:/Program Files (x86)/ffmpeg/ffmpeg-6.1.1-full_build/bin/ffprobe.exe";
-
+    private static String ffmpegPath;
+    private static String ffprobePath;
     private static FFmpegExecutor singleton;
     private FFmpegUtil(){
 
@@ -25,5 +26,10 @@ public class FFmpegUtil {
             }
         }
         return singleton;
+    }
+    @Autowired
+    public void setPath(@Value("${ffmpeg.ffmpeg-path}") String path1, @Value("${ffmpeg.ffprobe-path}") String path2){
+        ffmpegPath = path1;
+        ffprobePath = path2;
     }
 }

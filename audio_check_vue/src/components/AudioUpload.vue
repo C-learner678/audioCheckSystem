@@ -48,11 +48,28 @@
         </el-card>
       </el-col>
     </el-row>
+    <el-dialog :title="'识别结果'" :visible.sync="openDialog">
+      <el-row>
+        <el-col :span="2"><br></el-col>
+        <el-col :span="20">
+          <el-table :data="result">
+            <el-table-column prop="fileName" label="文件名称" :align="'center'" width="150" show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column prop="context" label="文件内容" :align="'center'" width="450" show-overflow-tooltip>
+            </el-table-column>
+          </el-table>
+        </el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="openDialog = false">取消</el-button>
+        <el-button type="primary" @click="addDocs">添加到数据库</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { recognizeFile } from '@/api/api'
+import { recognizeFile, addDoc } from '@/api/api'
 
 export default {
   name: 'AudioUpload',
@@ -108,6 +125,17 @@ export default {
       .then((res) => {
         this.uploadForm.fileList = []
         this.$message.success('识别完成')
+        this.openDialog = true
+        this.result = res.data
+      }).catch((error) => {
+      });
+    },
+    addDocs(){
+      addDoc(0, this.result)
+      .then((res) => {
+        this.$message.success('添加完成')
+        this.result = []
+        this.openDialog = false
       }).catch((error) => {
       });
     }
@@ -121,7 +149,10 @@ export default {
         format: 'pcm',
         rate: '16000',
         fileList: [],
-      }
+      },
+      openDialog: false,
+      result: [],
+      category_id: 0
     }
   },
   created(){

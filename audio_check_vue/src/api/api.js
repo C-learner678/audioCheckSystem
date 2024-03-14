@@ -106,3 +106,13 @@ export function recognizeFile(format, rate, fileList){
   })  
 }
 
+export function addDoc(category, files){
+  return request({
+  url: 'addDoc',
+  method: 'POST',
+  data: {
+    category,
+    files
+  }
+})  
+}

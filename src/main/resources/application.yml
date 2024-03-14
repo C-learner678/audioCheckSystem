@@ -43,17 +43,25 @@ file:
     path:
       C:/files/audio/
 
-api-key:
-  3haSXBnr6Xk5mQLxC3uhfGKY
-
-secret-key:
-  tpAQaHaZoL0BwJa9ZXP9Aw6gmnZlZlnZ
-
-cuid:
-  vUEHFxL4Hg3rFgqvuSFTx29frx7iZqLO
+baidu:
+  api-key:
+    3haSXBnr6Xk5mQLxC3uhfGKY
+  secret-key:
+    tpAQaHaZoL0BwJa9ZXP9Aw6gmnZlZlnZ
+  cuid:
+    vUEHFxL4Hg3rFgqvuSFTx29frx7iZqLO
 
 ffmpeg:
-  C:/Program Files (x86)/ffmpeg/ffmpeg-6.1.1-full_build/bin/ffmpeg.exe
+  ffmpeg-path:
+    C:/Program Files (x86)/ffmpeg/ffmpeg-6.1.1-full_build/bin/ffmpeg.exe
+  ffprobe-path:
+    C:/Program Files (x86)/ffmpeg/ffmpeg-6.1.1-full_build/bin/ffprobe.exe
 
-ffprobe:
-  C:/Program Files (x86)/ffmpeg/ffmpeg-6.1.1-full_build/bin/ffprobe.exe
+elastic:
+  host:
+    localhost
+  port:
+    9200
+  auth:
+    Basic ZWxhc3RpYzoxMjM0NTY=
+

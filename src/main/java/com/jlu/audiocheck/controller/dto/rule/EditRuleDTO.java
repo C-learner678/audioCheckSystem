@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @ApiModel(description="编辑规则DTO")
 public class EditRuleDTO {
-    @NotNull
+    @NotNull(message = "规则ID不能为空")
     @ApiModelProperty("规则ID")
     private Integer id;
     @NotBlank(message = "规则名称不能为空")
