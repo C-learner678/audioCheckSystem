@@ -6,8 +6,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/audio_check?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    username: 
-    password: 
+    username: root
+    password: 123456
   redis:
     database: 1
     host: 127.0.0.1
@@ -45,17 +45,17 @@ file:
 
 baidu:
   api-key:
-    
+    3haSXBnr6Xk5mQLxC3uhfGKY
   secret-key:
-    
+    tpAQaHaZoL0BwJa9ZXP9Aw6gmnZlZlnZ
   cuid:
-    
+    vUEHFxL4Hg3rFgqvuSFTx29frx7iZqLO
 
 ffmpeg:
   ffmpeg-path:
-    
+    C:/Program Files (x86)/ffmpeg/ffmpeg-6.1.1-full_build/bin/ffmpeg.exe
   ffprobe-path:
-    
+    C:/Program Files (x86)/ffmpeg/ffmpeg-6.1.1-full_build/bin/ffprobe.exe
 
 elastic:
   host:
@@ -63,5 +63,5 @@ elastic:
   port:
     9200
   auth:
-    
+    Basic ZWxhc3RpYzoxMjM0NTY=
 
