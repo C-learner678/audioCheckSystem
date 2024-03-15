@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### application.yml ###
+/audioCheck\src\main\resources/application.yml
