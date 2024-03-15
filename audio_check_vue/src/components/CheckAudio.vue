@@ -49,6 +49,18 @@
       <el-pagination layout="prev, pager, next" :total="totalNum" :page-size="pageSize" @current-change="pageChange" :align="'center'">
       </el-pagination>
     </el-dialog>
+    <!-- 查看详情点击按钮时显示） -->
+    <el-dialog title="匹配详情" :visible.sync="InfoVisible">
+      <el-table :data="matchResultInfo" style="width: 100%">
+        <el-table-column prop="subPattern" label="子规则" :align="'center'" width="200" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column prop="text" label="匹配内容" :align="'center'" width="500" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <div v-html='scope.row.text'></div>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -90,13 +102,14 @@ export default {
       }
       match(this.ruleContext)
       .then((res) => {
-        this.matchResult = res.data
+        this.matchResult = res.data.list
       }).catch((error) => {
       })
     },
     //查看详情
     showInfo(row){
-      
+      this.matchResultInfo = row.matchData
+      this.InfoVisible = true
     }
   },
   data() {
@@ -110,6 +123,8 @@ export default {
       searchName1: '',
       ruleContext: '',
       matchResult: [],
+      InfoVisible: false,
+      matchResultInfo: []
     }
   },
   created(){

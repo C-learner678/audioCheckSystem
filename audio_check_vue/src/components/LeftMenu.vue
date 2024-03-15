@@ -26,6 +26,12 @@
               <i class="el-icon-menu"></i>
               <span slot="title">文件管理</span>
             </el-menu-item>
+            <!--
+            <el-menu-item index="3">
+              <i class="el-icon-menu"></i>
+              <span slot="title">文件分类</span>
+            </el-menu-item>
+            -->
           </el-menu>
         </div>
         <div v-else-if="index=='3'">
@@ -60,6 +66,9 @@
         <div v-else-if="index=='2' && leftIndex=='2'">
           <audio-table></audio-table>
         </div>
+        <div v-else-if="index=='2' && leftIndex=='3'">
+          <audio-category></audio-category>
+        </div>
         <div v-else-if="index=='3' && leftIndex=='1'">
           <check-audio></check-audio>
         </div>
@@ -72,11 +81,11 @@
 </template>
 
 <script>
-import RuleTable from './RuleTable.vue';
+import RuleTable from './RuleTable.vue'
 import RuleDoc from './RuleDoc.vue'
 import AudioUpload from './AudioUpload.vue'
-import AudioTable from './AudioTable.vue';
-import ModifyPassword from './ModifyPassword.vue'; 
+import AudioTable from './AudioTable.vue'
+import ModifyPassword from './ModifyPassword.vue';
 import CheckAudio from './CheckAudio.vue'
 
 export default {
@@ -87,7 +96,7 @@ export default {
     AudioUpload,
     ModifyPassword,
     AudioTable,
-    CheckAudio
+    CheckAudio,
   },
   methods: {
     handleSelect(key, keyPath) {

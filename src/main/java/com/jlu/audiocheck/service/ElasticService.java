@@ -9,18 +9,14 @@ import co.elastic.clients.elasticsearch.core.BulkResponse;
 import co.elastic.clients.elasticsearch.core.DeleteResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import co.elastic.clients.elasticsearch.indices.RefreshRequest;
-import co.elastic.clients.elasticsearch.indices.RefreshResponse;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jlu.audiocheck.common.elastic.ElasticsearchClientUtil;
 import com.jlu.audiocheck.common.result.Result;
 import com.jlu.audiocheck.controller.dto.elastic.AddDocDTO;
 import com.jlu.audiocheck.controller.dto.elastic.DeleteDocDTO;
 import com.jlu.audiocheck.controller.dto.elastic.MatchDTO;
-import com.jlu.audiocheck.controller.vo.elastic.SearchDocVO;
-import com.jlu.audiocheck.controller.vo.elastic.TextVO;
+import com.jlu.audiocheck.controller.vo.elastic.*;
 import com.jlu.audiocheck.elasticSearch.ElasticSearch;
-import com.jlu.audiocheck.elasticSearch.MatchData;
 import com.jlu.audiocheck.elasticSearch.MatchResult;
 import com.jlu.audiocheck.entity.Text;
 import com.jlu.audiocheck.ruleToolGenerated.parserRulesLexer;
@@ -110,12 +106,26 @@ public class ElasticService {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         parserRulesParser parser = new parserRulesParser(tokens);
         ParseTree tree = parser.pattern();
-        ElasticSearch visitor = new ElasticSearch((long) userId, "<font color=\"red\">", "</font>", client);
+        ElasticSearch visitor = new ElasticSearch((long) userId, "<span style=\"color: red;\">", "</span>", client);
         MatchResult result = visitor.visit(tree);
-        List<MatchData> resultList = new ArrayList<>();
-        result.getData().forEach((i, j) -> {
-            resultList.add(j);
+        MatchVO matchVO = new MatchVO();
+        result.getData().forEach((id, data) -> {
+            MatchResultVO matchResultVO = new MatchResultVO();
+            matchResultVO.setName(data.getName());
+            StringBuilder sb = new StringBuilder();
+            data.getPatternToHighlightedText().forEach((subpattern, text) -> {
+                MatchDataVO matchDataVO = new MatchDataVO();
+                matchDataVO.setSubPattern(subpattern);
+                matchDataVO.setText(text);
+                if(!sb.toString().isEmpty()){
+                    sb.append(",");
+                }
+                sb.append(subpattern);
+                matchResultVO.getMatchData().add(matchDataVO);
+            });
+            matchResultVO.setSubPatterns(sb.toString());
+            matchVO.getList().add(matchResultVO);
         });
-        return Result.success(resultList);
+        return Result.success(matchVO);
     }
 }

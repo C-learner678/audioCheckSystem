@@ -3,12 +3,10 @@ package com.jlu.audiocheck.elasticSearch;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.query_dsl.MatchPhraseQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
-import co.elastic.clients.elasticsearch._types.query_dsl.RangeQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.HighlightField;
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import co.elastic.clients.json.JsonData;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jlu.audiocheck.ruleToolGenerated.parserRulesBaseVisitor;
 import com.jlu.audiocheck.ruleToolGenerated.parserRulesParser;
@@ -170,8 +168,8 @@ public class ElasticSearch extends parserRulesBaseVisitor<MatchResult> {
                 if(hit.source() != null) {
                     String id = hit.id();
                     String name = hit.source().get("name").asText();
-                    List<String> highlights = hit.highlight().get("context");
-                    HashMap<String, List<String>> map = new HashMap<>();
+                    String highlights = hit.highlight().get("context").get(0);
+                    HashMap<String, String> map = new HashMap<>();
                     map.put(pattern, highlights);
                     MatchData data = new MatchData(name, map);
                     result.getData().put(id, data);
