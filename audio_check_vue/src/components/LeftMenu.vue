@@ -57,6 +57,12 @@
         <div v-else-if="index=='2' && leftIndex=='1'">
           <audio-upload></audio-upload>
         </div>
+        <div v-else-if="index=='2' && leftIndex=='2'">
+          <audio-table></audio-table>
+        </div>
+        <div v-else-if="index=='3' && leftIndex=='1'">
+          <check-audio></check-audio>
+        </div>
         <div v-else-if="index=='4' && leftIndex=='1'">
           <modify-password></modify-password>
         </div>
@@ -69,7 +75,9 @@
 import RuleTable from './RuleTable.vue';
 import RuleDoc from './RuleDoc.vue'
 import AudioUpload from './AudioUpload.vue'
+import AudioTable from './AudioTable.vue';
 import ModifyPassword from './ModifyPassword.vue'; 
+import CheckAudio from './CheckAudio.vue'
 
 export default {
   name: 'LeftMenu',
@@ -78,6 +86,8 @@ export default {
     RuleDoc,
     AudioUpload,
     ModifyPassword,
+    AudioTable,
+    CheckAudio
   },
   methods: {
     handleSelect(key, keyPath) {

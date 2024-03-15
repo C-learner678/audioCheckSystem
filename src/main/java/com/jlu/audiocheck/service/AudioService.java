@@ -1,7 +1,7 @@
 package com.jlu.audiocheck.service;
 
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.jlu.audiocheck.common.ffmpeg.FFmpegUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
@@ -106,7 +106,6 @@ public class AudioService {
         for (int i = 0; i < files.size(); ++i) {
             String speech = (String) files.get(i).get(0);
             int length = (int) files.get(i).get(1);
-            /*
             RequestBody body = RequestBody.create(mediaType,
                     "{\"format\":\"" + format + "\"," +
                             "\"rate\":\"" + rate + "\"," +
@@ -124,9 +123,6 @@ public class AudioService {
             Response response = HTTP_CLIENT.newCall(request).execute();
             JSONObject jsonObject = JSON.parseObject(response.body().string());
             String res = (String) jsonObject.getJSONArray("result").get(0);
-
-             */
-            String res = "我是结果";
             HashMap<String, String> map = new HashMap<>();
             map.put("fileName", fileNames.get(i));
             map.put("context", res);

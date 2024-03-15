@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = IOException.class)
     public Result handler(IOException e){
         log.error("IO异常：" + e.getMessage());
-        return Result.fail("服务器文件系统出错");
+        return Result.fail("出错了！");
     }
     //其他
     @ResponseStatus(HttpStatus.BAD_REQUEST)

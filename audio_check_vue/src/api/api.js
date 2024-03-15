@@ -108,11 +108,38 @@ export function recognizeFile(format, rate, fileList){
 
 export function addDoc(category, files){
   return request({
-  url: 'addDoc',
-  method: 'POST',
-  data: {
-    category,
-    files
-  }
-})  
+    url: 'addDoc',
+    method: 'POST',
+    data: {
+      category,
+      files
+    }
+  })  
+}
+
+export function searchDoc(){
+  return request({
+    url: 'searchDoc',
+    method: 'POST',
+  })
+}
+
+export function deleteDoc(id){
+  return request({
+    url: 'deleteDoc',
+    method: 'POST',
+    data: {
+      id
+    }
+  })  
+}
+
+export function match(pattern){
+  return request({
+    url: 'match',
+    method: 'POST',
+    data: {
+      pattern
+    }
+  })  
 }
