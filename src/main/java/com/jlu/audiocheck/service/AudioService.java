@@ -10,17 +10,22 @@ import com.jlu.audiocheck.common.result.Result;
 import com.jlu.audiocheck.controller.dto.audio.RecognizeFileDTO;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSON;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @Slf4j
 @Service
@@ -33,6 +38,9 @@ public class AudioService {
     private String SECRET_KEY;
     @Value("${baidu.cuid}")
     private String cuid;
+
+    @Resource(name = "MyThreadPoolTaskExecutor")
+    private ThreadPoolTaskExecutor executor;
 
     private final OkHttpClient HTTP_CLIENT = OkHttpUtil.getInstance();
 
@@ -50,15 +58,24 @@ public class AudioService {
 
     //pcm格式：直接上传给百度
     //其他格式：先用ffmpeg转换到pcm格式，再上传给百度
-    public Result recognizeFile(RecognizeFileDTO recognizeFileDTO) throws IOException {
-        if(recognizeFileDTO.getFormat().equals("pcm")) {
-            if (!recognizeFileDTO.getRate().equals("16000") && !recognizeFileDTO.getRate().equals("8000")){
+    //使用异步方法实现
+    public Result recognizeFile(RecognizeFileDTO recognizeFileDTO) throws ExecutionException, InterruptedException {
+        if (recognizeFileDTO.getFormat().equals("pcm")) {
+            if (!recognizeFileDTO.getRate().equals("16000") && !recognizeFileDTO.getRate().equals("8000")) {
                 return Result.fail("采样率错误");
             }
         }
+        log.info("当前线程" + Thread.currentThread().getName());
+        Future<Result> f = executor.submit(() -> operateFiles(recognizeFileDTO)); //Callable
+        return Result.success(f.get());
+    }
+
+    @Async("MyThreadPoolTaskExecutor")
+    protected Result operateFiles(RecognizeFileDTO recognizeFileDTO) throws IOException {
+        log.info("当前线程" + Thread.currentThread().getName());
         ArrayList<ArrayList<Object>> files = new ArrayList<>();
         ArrayList<String> fileNames = new ArrayList<>();
-        if(recognizeFileDTO.getFormat().equals("pcm")) {
+        if (recognizeFileDTO.getFormat().equals("pcm")) {
             for (Map<String, String> m : recognizeFileDTO.getFileList()) {
                 String path1 = path + m.get("serverFileName");
                 if (!Files.exists(Paths.get(path1))) {
@@ -69,12 +86,12 @@ public class AudioService {
                     fileNames.add(clientName);
                 }
             }
-        }else {
+        } else {
             for (Map<String, String> m : recognizeFileDTO.getFileList()) {
                 String path1 = path + m.get("serverFileName");
                 if (!Files.exists(Paths.get(path1))) {
                     return Result.fail("文件" + m.get("fileName") + "不存在，请重新上传");
-                } else {
+                }else{
                     int index = m.get("serverFileName").lastIndexOf('.');
                     String newServerName = m.get("serverFileName").substring(0, index) + ".pcm";
                     String path2 = path + newServerName;

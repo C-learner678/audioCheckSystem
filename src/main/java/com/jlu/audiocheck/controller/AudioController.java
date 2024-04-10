@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping
@@ -27,7 +28,7 @@ public class AudioController {
 
     @PostMapping("/recognizeFile")
     @ApiOperation(value = "识别音频文件")
-    public Result recognizeFile(@Valid @RequestBody RecognizeFileDTO recognizeFileDTO) throws IOException {
+    public Result recognizeFile(@Valid @RequestBody RecognizeFileDTO recognizeFileDTO) throws ExecutionException, InterruptedException {
         StpUtil.checkLogin();
         return audioService.recognizeFile(recognizeFileDTO);
     }

@@ -126,7 +126,7 @@ export default {
         this.uploadForm.fileList = []
         this.$message.success('识别完成')
         this.openDialog = true
-        this.result = res.data
+        this.result = res.data.data
       }).catch((error) => {
       });
     },
