@@ -65,14 +65,14 @@ public class AudioService {
                 return Result.fail("采样率错误");
             }
         }
-        log.info("当前线程" + Thread.currentThread().getName());
+        //log.info("当前线程" + Thread.currentThread().getName());
         Future<Result> f = executor.submit(() -> operateFiles(recognizeFileDTO)); //Callable
         return Result.success(f.get());
     }
 
     @Async("MyThreadPoolTaskExecutor")
     protected Result operateFiles(RecognizeFileDTO recognizeFileDTO) throws IOException {
-        log.info("当前线程" + Thread.currentThread().getName());
+        //log.info("当前线程" + Thread.currentThread().getName());
         ArrayList<ArrayList<Object>> files = new ArrayList<>();
         ArrayList<String> fileNames = new ArrayList<>();
         if (recognizeFileDTO.getFormat().equals("pcm")) {

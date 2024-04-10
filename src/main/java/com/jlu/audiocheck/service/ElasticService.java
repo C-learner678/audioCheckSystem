@@ -21,10 +21,13 @@ import com.jlu.audiocheck.elasticSearch.MatchResult;
 import com.jlu.audiocheck.entity.Text;
 import com.jlu.audiocheck.ruleToolGenerated.parserRulesLexer;
 import com.jlu.audiocheck.ruleToolGenerated.parserRulesParser;
+import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -33,12 +36,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 public class ElasticService {
     private final ElasticsearchClient client = ElasticsearchClientUtil.getInstance();
 
     private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    @Autowired
+    private RedisTemplate redisTemplate; //每次读取时生成新的key，每次修改时都在改完数据库后删掉缓存
 
     public Result addDoc(AddDocDTO addDocDTO) throws IOException {
         Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
@@ -61,11 +69,22 @@ public class ElasticService {
         if(result.errors()){
             return Result.fail("添加失败！");
         }
+
+        redisTemplate.delete("doc_" + userId);
+
         return Result.success();
     }
 
     public Result searchDoc() throws IOException {
         Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
+
+        if(redisTemplate.hasKey("doc_" + userId)){
+            log.info("using redis");
+            SearchDocVO vo1 = (SearchDocVO) redisTemplate.opsForValue().get("doc_" + userId);
+            return Result.success(vo1);
+        }
+        log.info("not using redis");
+
         Query userFilter = TermQuery.of(q -> q.field("userId").value(userId))._toQuery();
         SearchResponse<ObjectNode> response = client.search(s -> s.index("texts")
                 .query(q -> q.bool(b -> b.filter(userFilter))),
@@ -85,6 +104,10 @@ public class ElasticService {
             t.setUploadTime(df.format(date));
             vo.getList().add(t);
         }
+
+        redisTemplate.opsForValue().set("doc_" + userId, vo);
+        redisTemplate.expire("doc_" + userId, 10, TimeUnit.MINUTES);
+
         return Result.success(vo);
     }
 
@@ -92,6 +115,8 @@ public class ElasticService {
         DeleteResponse response = client.delete(i -> i.index("texts").id(deleteDocDTO.getId()));
         client.indices().refresh(); //刷新
         if(response.result().jsonValue().equals("deleted")) {
+            Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
+            redisTemplate.delete("doc_" + userId);
             return Result.success();
         }else{
             return Result.fail("删除失败");

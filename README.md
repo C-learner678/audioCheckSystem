@@ -14,6 +14,7 @@ readme.docx<br>
 7.百度语音识别服务接口<br>
 8.ANTLR4<br>
 9.Elasticsearch<br>
+10.Redis
 
 建立Elastic数据库：<br>
 PUT /texts
@@ -41,3 +42,6 @@ PUT /texts
   }
 }
 ```
+
+规则说明：
+
