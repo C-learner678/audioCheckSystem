@@ -50,6 +50,7 @@ public class ElasticService {
 
     public Result addDoc(AddDocDTO addDocDTO) throws IOException {
         Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
+        redisTemplate.delete("doc_" + userId);
         Integer categoryId = addDocDTO.getCategoryId();
         ArrayList<Text> list = new ArrayList<>();
         for(Map<String, String> m: addDocDTO.getFiles()){
@@ -69,9 +70,6 @@ public class ElasticService {
         if(result.errors()){
             return Result.fail("添加失败！");
         }
-
-        redisTemplate.delete("doc_" + userId);
-
         return Result.success();
     }
 
@@ -112,11 +110,11 @@ public class ElasticService {
     }
 
     public Result deleteDoc(DeleteDocDTO deleteDocDTO) throws IOException{
+        Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
+        redisTemplate.delete("doc_" + userId);
         DeleteResponse response = client.delete(i -> i.index("texts").id(deleteDocDTO.getId()));
         client.indices().refresh(); //刷新
         if(response.result().jsonValue().equals("deleted")) {
-            Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
-            redisTemplate.delete("doc_" + userId);
             return Result.success();
         }else{
             return Result.fail("删除失败");
